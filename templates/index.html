@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Encryption Chat</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen p-4">
+    <h1 class="text-center text-3xl font-bold mb-2.5">RSA Encryption Chat</h1>
+
+    <main class="flex w-11/12 h-5/6 border border-black rounded-md mx-auto p-2.5">
+        <div class="w-1/2 h-full flex flex-col justify-between mr-2.5">
+            <div id="chat" class="border border-black rounded-md p-2.5 mb-2.5 flex-grow overflow-y-auto break-words">
+                
+            </div>
+
+            <div class="flex">
+                <input id="message" class="w-full border border-black rounded-md p-2.5 mr-2.5 outline-none" type="text" name="message" placeholder="Type your message...">
+                <button id="btnEncrypt" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-md p-2.5 outline-none" type="button">Send</button>
+            </div>
+        </div>
+
+        <div class="w-1/2 h-full flex flex-col border border-black rounded-md p-2.5">
+            <div class="flex flex-col mb-2.5">
+                <label class="font-semibold" for="publicKey">Public Key:</label>
+                <input id="publicKey" class="border border-black rounded-md p-2.5 outline-none" type="text" name="publicKey" value="{{ public_key }}">
+            </div>
+        
+            <div class="flex flex-col">
+                <label class="font-semibold" for="privateKey">Private Key:</label>
+                <input id="privateKey" class="border border-black rounded-md p-2.5 outline-none" type="text" name="privateKey" value="{{ private_key }}">
+            </div>
+        
+            <div class="flex flex-col flex-grow">
+                <h1 class="text-center text-xl font-bold my-2.5">Decryption RSA</h1>
+        
+                <textarea class="w-full h-full border border-black rounded-md p-2.5 mb-2.5 outline-none" name="encryptedMessage" id="encryptedMessage"></textarea>
+        
+                <button id="btnDecrypt" class="w-full bg-red-600 hover:bg-red-500 text-white font-semibold rounded-md p-2.5 outline-none" type="button">Decrypt Message</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="../static/scripts/main.js"></script>
+</body>
+</html>
