@@ -9,9 +9,14 @@
 </head>
 <body class="h-screen p-4">
     <h1 class="text-center text-3xl font-bold mb-2.5">RSA Encryption Chat</h1>
-
+    
     <main class="flex w-11/12 h-5/6 border border-black rounded-md mx-auto p-2.5">
         <div class="w-1/2 h-full flex flex-col justify-between mr-2.5">
+            <div class="flex flex-col mb-2.5">
+                <label class="font-semibold">Enviar para:</label>
+                <select id="usersList" class="border border-black rounded-md p-2.5 outline-none"></select>
+            </div>
+
             <div id="chat" class="border border-black rounded-md p-2.5 mb-2.5 flex-grow overflow-y-auto break-words">
                 
             </div>
@@ -25,12 +30,12 @@
         <div class="w-1/2 h-full flex flex-col border border-black rounded-md p-2.5">
             <div class="flex flex-col mb-2.5">
                 <label class="font-semibold" for="publicKey">Public Key:</label>
-                <input id="publicKey" class="border border-black rounded-md p-2.5 outline-none" type="text" name="publicKey" value="{{ public_key }}">
+                <input id="publicKey" class="border border-black rounded-md p-2.5 outline-none" type="text" name="publicKey" readonly>
             </div>
         
             <div class="flex flex-col">
                 <label class="font-semibold" for="privateKey">Private Key:</label>
-                <input id="privateKey" class="border border-black rounded-md p-2.5 outline-none" type="text" name="privateKey" value="{{ private_key }}">
+                <input id="privateKey" class="border border-black rounded-md p-2.5 outline-none" type="text" name="privateKey">
             </div>
         
             <div class="flex flex-col flex-grow">

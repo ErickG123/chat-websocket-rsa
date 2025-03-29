@@ -5,6 +5,8 @@ from flask_cors import CORS
 
 socketio = SocketIO(cors_allowed_origins="*")
 
+user_keys = {}
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
@@ -12,22 +14,44 @@ def create_app():
 
     @app.route("/")
     def index():
-        public_key, private_key = generate_keys()
-
-        return render_template("index.html", public_key=public_key, private_key=private_key)
+        return render_template("index.html")
     
+    @socketio.on("connect")
+    def handle_connect():
+        public_key, private_key = generate_keys()
+        user_keys[request.sid] = public_key
+
+        socketio.emit("update_users", user_keys)
+
+        socketio.emit("public_key", {
+            "socket_id": request.sid,
+            "public_key": public_key,
+            "private_key": str(private_key)
+        }, room=request.sid)
+
+    @socketio.on("disconnect")
+    def handle_disconnect():
+        if request.sid in user_keys:
+            del user_keys[request.sid]
+
+        socketio.emit("update_users", user_keys)
+
     @socketio.on("encrypt_message")
     def encrypt_message(data):
         message_to_encrypt = data.get("message")
-        public_key_str = data.get("publicKey")
+        recipient_id = data.get("recipient_id")
 
-        public_key_str = public_key_str.strip("()")
-        e, n = map(int, public_key_str.split(","))
-        public_key = (e, n)
+        if recipient_id not in user_keys:
+            return
+        
+        public_key = user_keys[recipient_id]
 
         encrypted_message = encrypt(message_to_encrypt, public_key)
 
-        socketio.emit("encryptedMessage", encrypted_message)
+        socketio.emit("encrypted_message", {
+            "sender": request.sid,
+            "ciphertext": ",".join(map(str, encrypted_message))
+        }, room=recipient_id)
 
     @socketio.on("decrypt_message")
     def decrypt_message(data):
@@ -35,12 +59,12 @@ def create_app():
         private_key_str = data.get("privateKey")
 
         private_key_str = private_key_str.strip("()")
-        e, n = map(int, private_key_str.split(","))
-        private_key = (e, n)
+        d, n = map(int, private_key_str.split(","))
+        private_key = (d, n)
 
         decrypted_message = decrypt(message_to_decrypt, private_key)
 
-        socketio.emit("decryptedMessage", decrypted_message)
+        socketio.emit("decrypted_message", decrypted_message, room=request.sid)
 
     return app
 
