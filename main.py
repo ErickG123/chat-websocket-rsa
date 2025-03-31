@@ -15,7 +15,7 @@ def create_app():
     @app.route("/")
     def index():
         return render_template("index.html")
-    
+
     @socketio.on("connect")
     def handle_connect():
         public_key, private_key = generate_keys()
@@ -43,7 +43,7 @@ def create_app():
 
         if recipient_id not in user_keys:
             return
-        
+
         public_key = user_keys[recipient_id]
 
         encrypted_message = encrypt(message_to_encrypt, public_key)
